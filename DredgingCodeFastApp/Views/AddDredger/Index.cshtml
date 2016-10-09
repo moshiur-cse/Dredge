@@ -1,0 +1,128 @@
+﻿@using Microsoft.SqlServer.Server
+@*@model IEnumerable<DredgingCodeFastApp.Models.MauzaModels>
+
+@{
+    ViewBag.Title = "Index";
+    var offset = ViewBag.Offset + ViewBag.Limit;
+    var offset1 = ViewBag.Offset - ViewBag.Limit;
+    var count = ViewBag.Count;
+}*@
+@model PagedList.IPagedList<DredgingCodeFastApp.Models.MauzaModels>
+@using PagedList.Mvc;
+
+@section style
+{
+
+    @*<link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />*@
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+}
+
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "AddDredger", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table id="myTable" class="table">
+    <thead>
+    <tr>
+        
+        <th>
+            @Html.ActionLink("Union Id", "Index", new { sortOrder = ViewBag.UnionIdSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Mauza Name", "Index", new { sortOrder = ViewBag.MauzaSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+        @Html.ActionLink("Dredger Id", "Index", new { sortOrder = ViewBag.DredgeIdParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Union_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mauza_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dredger_id)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+            </td>
+        </tr>
+    }
+    </tbody>
+
+</table>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+
+@*@if (offset1 >= 0)
+{
+    @Html.ActionLink("Previous", "Index", new { id = @offset1 })
+}
+    |
+@{
+    int value = 0;
+    int i;
+    int k = 10;
+  
+
+}
+
+@for (i = 0; i < count - ViewBag.Limit; i += ViewBag.Limit)
+{
+    value++;
+    //string j = value.ToString();
+
+    for(k=i;k<i+10;k++)
+    {
+
+        if (k+i<10+i)
+        {
+            int a = value + i;
+            string j = a.ToString();
+            <label> @Html.ActionLink(j, "Index", new {id = i + ViewBag.Limit}) &nbsp; &nbsp; </label>
+        }
+    }
+    
+}
+    |
+@if (offset < count)
+{
+
+    @Html.ActionLink("Next", "Index", new { id = offset })
+
+}
+<label> &nbsp;&nbsp;  Total Data: @count</label>*@
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.2.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        //$(document).ready(function () {
+        //    $('#myTable').DataTable();
+        //});
+    </script>
+}

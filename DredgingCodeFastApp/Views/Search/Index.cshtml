@@ -1,0 +1,283 @@
+﻿@*@model IEnumerable<DredgingCodeFastApp.Models.DivisionModels>*@
+
+@*@model IEnumerable<DredgingCodeFastApp.Models.DredgInformationModels>*@
+
+@model DredgingCodeFastApp.Models.DivisionModels
+@*@using DredgingCodeFastApp.Models;*@
+
+@{
+    ViewBag.Title = "Index";
+}
+@section style
+{
+
+    <link href="~/Content/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+
+}
+<h2>Index</h2>
+
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Divison</label>
+            </div>
+
+            <div class="col-md-10">
+                <select name="divisionId" id="divisionId">
+                    <option value="">Select...</option>
+                    @foreach (var division in ViewBag.Divisions)
+                    {
+                        <option value="@division.Id">@division.Division_name</option>
+                    }
+                </select>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label>District</label>
+            </div>
+            <div class="col-md-10">
+                <select name="districtId" id="districtId">
+                    <option value="">Select...</option>
+
+                </select>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Upazila</label>
+            </div>
+            <div class="col-md-10">
+                <select name="upazilaId" id="upazilaId">
+                    <option value="">Select...</option>
+
+                </select>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Union</label>
+            </div>
+            <div class="col-md-10">
+                <select name="unionId" id="unionId">
+                    <option value="">Select...</option>
+
+                </select>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Mauza</label>
+            </div>
+            <div class="col-md-10">
+                <select name="mauzaId" id="mauzaId">
+                    <option value="">Select...</option>
+
+                </select>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="myTable" class="table">
+    <thead>
+        <tr>
+            <th><label>DateTime</label></th>
+            <th><label>Density</label></th>
+            <th><label>Velocity</label></th>
+            <th><label>Production</label></th>
+        </tr>
+    </thead>
+
+    <tbody id="body"></tbody>
+
+</table>
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.2.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $("#divisionId").change(function () {
+                $("#districtId").empty();
+
+                var deptId = $("#divisionId").val();
+                //$("#studentId").empty();
+                var json = { divisionId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDistrictByDivisionId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#districtId").append('<option value=' + value.Id + '>' + value.District_name + '</option>');
+
+                        });
+                    }
+                });
+            });
+
+            $("#districtId").change(function () {
+                $("#upazilaId").empty();
+
+                var deptId = $("#districtId").val();
+                //$("#studentId").empty();
+                var json = { districtId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetUpazilaByDistrictId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#upazilaId").append('<option value=' + value.Id + '>' + value.Upazila_name + '</option>');
+
+                        });
+                    }
+                });
+            });
+            $("#upazilaId").change(function () {
+                $("#unionId").empty();
+
+                var deptId = $("#upazilaId").val();
+                //$("#studentId").empty();
+                var json = { upazilaId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetUnionByUpazilaId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#unionId").append('<option value=' + value.Id + '>' + value.Union_name + '</option>');
+
+                        });
+                    }
+                });
+            });
+            $("#unionId").change(function () {
+                $("#mauzaId").empty();
+
+                var deptId = $("#unionId").val();
+                //$("#studentId").empty();
+                var json = { unionId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetMauzaByUnionId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#mauzaId").append('<option value=' + value.Id + '>' + value.Mauza_name + '</option>');
+
+                        });
+                    }
+                });
+            });
+            $("#unionId").change(function () {
+                $("#mauzaId").empty();
+
+                var deptId = $("#unionId").val();
+                //$("#studentId").empty();
+                var json = { unionId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetMauzaByUnionId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#mauzaId").append('<option value=' + value.Dredger_id + '>' + value.Mauza_name + '</option>');
+
+                        });
+                    }
+                });
+            });
+
+            @*$("#unionId").change(function () {
+                $("#mauzaId").empty();
+
+                var deptId = $("#unionId").val();
+                //$("#studentId").empty();
+                var json = { unionId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDredgerByMauzaId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#mauzaId").append('<option value=' + value.Id + '>' + value.Mauza_name + '</option>');
+
+                        });
+                    }
+                });
+            });*@
+
+
+            $("#mauzaId").change(function () {
+                //$("#mauzaId").empty();
+
+                var deptId = $("#mauzaId").val();
+                //$("#studentId").empty();
+                var json = { dredgeId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDredgeInfoByMauzaId", "Search")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $.each(data, function (key, value) {
+
+
+                            var info = '<tr>' +
+                                '<td>' + value.DateTime + '</td>' +
+                                '<td>' + value.Density + '</td>' +
+                                '<td>' + value.Velocity + '</td>' +
+                                '<td>' + value.Production + '</td>' + '</tr>';
+
+
+                            $("#body").append(info);
+
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+
+
+

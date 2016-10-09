@@ -1,0 +1,107 @@
+﻿@model PagedList.IPagedList<DredgingCodeFastApp.Models.DredgInformationModels>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+
+}
+
+@section style
+{
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/jquery.datetimepicker.min.css" rel="stylesheet" />
+
+}
+
+
+<h2>Dredging Data Information</h2>
+<hr/>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
+@using (Html.BeginForm("Index", "Dredge", FormMethod.Get))
+{
+    <p>
+        Find by DateTime:<input type="Date" name="searchString1" class="some_class" value="" id="some_class_1" /> To
+        <input type="Date" name="searchString2" class="some_class" value="" id="some_class_2" />
+        
+    @*@Html.TextBox("searchString", new { @class = "some_class" }) To
+                          @Html.TextBox("searchString", new { @Class = "some_class" })*@   
+        <input type="submit" value="Search" />
+    </p>
+}
+
+
+@*<input type="text" class="some_class" value="" id="some_class_1" />
+<input type="text" class="some_class" value="" id="some_class_2" />*@
+
+
+<div>
+    <table id="myTable" class="table">
+        <thead>
+            <tr>
+                @*<th><label>Id</label></th>*@
+                <th>
+                    @Html.ActionLink("DateTime", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th><label>Density</label></th>
+                <th><label>Velocity</label></th>
+                <th><label>Production</label></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Density)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Velocity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Production)
+                    </td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                            @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                            @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                        </td>
+                    }
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+</div>
+
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.2.js"></script>
+    <script src="~/Scripts/combodate.js"></script>
+    <script src="~/Scripts/jquery.datetimepicker.full.js"></script>
+
+    <script>
+
+        $('.some_class').datetimepicker();
+    </script>
+}
